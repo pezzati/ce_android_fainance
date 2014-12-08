@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/hw2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/hw"
+        style="@style/Theme.PageIndicatorDefaults"
+        android:textSize="@android:dimen/notification_large_icon_width"
+        android:autoText="false"
+        android:gravity="center|top"
+        android:layout_alignParentEnd="false"
+        android:textAlignment="center"
+        android:layout_alignParentStart="false" />
+
+
+
+
+    <TextView
+        android:id="@+id/studentID"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/hw2"
+        android:text="@string/stdID"
+        android:singleLine="true"
+        android:textSize="30dp"
+        android:textAlignment="center"
+        android:background="@color/vpi__background_holo_light"
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/label_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/studentID"
+        android:background="@color/vpi__background_holo_light"
+        android:textSize="@dimen/default_title_indicator_footer_indicator_underline_padding"
+        android:textAlignment="center"
+        android:focusableInTouchMode="false"
+        android:gravity="center" />
+
+
+</RelativeLayout>
