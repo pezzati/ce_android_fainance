@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="/Users/negar/AndroidStudioProjects/MyApplication2 copy/viewPagerIndicatorLibrary/src/main/assets"/></dataSet><dataSet config="release"><source path="/Users/negar/AndroidStudioProjects/MyApplication2 copy/viewPagerIndicatorLibrary/src/release/assets"/></dataSet></merger>
+<merger version="3"><dataSet config="main"><source path="/Users/negar/GitHub/MyApplication2 copy/viewPagerIndicatorLibrary/src/main/assets"/></dataSet><dataSet config="release"><source path="/Users/negar/GitHub/MyApplication2 copy/viewPagerIndicatorLibrary/src/release/assets"/></dataSet></merger>

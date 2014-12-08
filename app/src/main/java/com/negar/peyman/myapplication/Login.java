@@ -34,10 +34,10 @@ public class Login extends Activity {
         setContentView(R.layout.viewpager_main);
 
         // Generate sample data
-        rank = new String[] { "1", "2", "3", "4", "5"};
+        rank = new String[] { "1", "2"};
 
-        stdID = new String[] { "90105356", "90105391", "90106039",
-                "90110823", "90110607" };
+        stdID = new String[] { "90105356",
+                "90110823" };
 
 
         flag = new int[] { R.drawable.ic_launcher, R.drawable.ic_launcher,
