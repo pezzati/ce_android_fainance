@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- From: file:/Users/negar/AndroidStudioProjects/MyApplication2/viewPagerIndicatorLibrary/build/intermediates/bundles/debug/res/values/values.xml -->
+    <!-- From: file:/Users/negar/GitHub/MyApplication2%20copy/viewPagerIndicatorLibrary/build/intermediates/bundles/debug/res/values/values.xml -->
     <eat-comment/>
     <attr format="boolean" name="centered"/>
     <attr format="color" name="selectedColor"/>

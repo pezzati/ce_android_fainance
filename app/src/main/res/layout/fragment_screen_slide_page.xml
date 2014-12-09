@@ -1,27 +1,50 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<!-- fragment_screen_slide_page.xml -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.peyman.negar.myfinance.ScreenSlidePageFragment">
+    android:id="@+id/date">
 
-    <!-- TODO: Update blank fragment layout -->
-
-    <TextView
-        android:layout_width="fill_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="#000"
-        android:textSize="40dp"
-        android:text="@string/hello_world" />
+        android:id="@+id/select"
+        android:gravity="center">
 
-    <TextView
-        android:layout_width="fill_parent"
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/pre"
+            android:layout_alignParentLeft="true"
+            android:background="@android:drawable/ic_media_rew" />
+
+
+        <TextView style="?android:textAppearanceMedium"
+            android:padding="16dp"
+            android:id="@+id/date_text"
+            android:lineSpacingMultiplier="1.2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:text="@string/hw"
+            android:gravity="center|center_vertical|center_horizontal" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/next"
+            android:background="@android:drawable/ic_media_ff"/>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world"
-        android:gravity="right"
-        android:textColor="#ff442eff"
-        android:textSize="50dp"
-        android:layout_gravity="center|right"
-        android:id="@+id/studentID" />
+        android:layout_below="@id/select"
+        android:id="@+id/finance"></RelativeLayout>
+</RelativeLayout>
 
 
-</FrameLayout>
+
+
