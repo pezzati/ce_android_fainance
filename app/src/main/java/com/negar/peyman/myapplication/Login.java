@@ -24,6 +24,7 @@ public class Login extends Activity {
     String[] stdID;
     int[] flag;
 
+
     CirclePageIndicator mIndicator;
     Button start;
 
@@ -74,23 +75,23 @@ public class Login extends Activity {
             }
         });
 
-        Thread timer = new Thread() {
-            public void run() {
-                try {
-                    // sleep(R.integer.SplashActivityTime);
-                    sleep(5000);
-                } catch (InterruptedException iEx) {
-                    iEx.printStackTrace();
-                } finally {
-                    Intent mainActivity = new Intent(Login.this,
-                            Main.class);
-
-                    startActivity(mainActivity);
-                    finish();
-                }
-            }
-        };
-        timer.start();
+//        Thread timer = new Thread() {
+//            public void run() {
+//                try {
+//                    // sleep(R.integer.SplashActivityTime);
+//                    sleep(5000);
+//                } catch (InterruptedException iEx) {
+//                    iEx.printStackTrace();
+//                } finally {
+//                    Intent mainActivity = new Intent(Login.this,
+//                            Main.class);
+//
+//                    startActivity(mainActivity);
+//                    finish();
+//                }
+//            }
+//        };
+//        timer.start();
 
     }
 }
