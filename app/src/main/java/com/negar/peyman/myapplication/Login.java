@@ -7,12 +7,13 @@ import android.os.Bundle;
 
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
 import com.viewpagerindicator.CirclePageIndicator;
-import com.viewpagerindicator.TitlePageIndicator;
-import com.viewpagerindicator.UnderlinePageIndicator;
+
 
 
 public class Login extends Activity {
@@ -23,6 +24,7 @@ public class Login extends Activity {
     String[] rank;
     String[] stdID;
     int[] flag;
+    boolean isClicked;
 
 
     CirclePageIndicator mIndicator;
@@ -32,8 +34,9 @@ public class Login extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Get the view from viewpager_main.xml
+        getActionBar().setTitle("تمرین دوم");
         setContentView(R.layout.viewpager_main);
-
+        isClicked = false;
         // Generate sample data
         rank = new String[] { "1", "2"};
 
@@ -68,30 +71,44 @@ public class Login extends Activity {
         start.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
-
+                isClicked = true;
                 Intent activityChangeIntent = new Intent(Login.this, Main.class);
                 activityChangeIntent.putExtra("ID", stdID[0]);
                 Login.this.startActivity(activityChangeIntent);
             }
         });
 
-//        Thread timer = new Thread() {
-//            public void run() {
-//                try {
-//                    // sleep(R.integer.SplashActivityTime);
-//                    sleep(5000);
-//                } catch (InterruptedException iEx) {
-//                    iEx.printStackTrace();
-//                } finally {
-//                    Intent mainActivity = new Intent(Login.this,
-//                            Main.class);
-//
-//                    startActivity(mainActivity);
-//                    finish();
-//                }
-//            }
-//        };
-//        timer.start();
+        Thread timer = new Thread() {
+            public void run() {
+                try {
+                    // sleep(R.integer.SplashActivityTime);
+                    sleep(5000);
+                } catch (InterruptedException iEx) {
+                    iEx.printStackTrace();
+                } finally {
+                    if (!isClicked){
+                        Intent mainActivity = new Intent(Login.this,
+                                Main.class);
 
+                        startActivity(mainActivity);
+                    }
+
+                    finish();
+                }
+            }
+        };
+        timer.start();
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
     }
 }

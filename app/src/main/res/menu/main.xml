@@ -1,8 +1,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.negar.peyman.myapplication.Main" >
-    <item android:id="@+id/action_settings"
-        android:title="@string/action_settings"
+    tools:context="com.negar.peyman.myapplication.Main">
+    <item android:id="@+id/developer1"
+        android:title="@string/negar"
         android:orderInCategory="100"
         android:showAsAction="never" />
+
+    <item android:id="@+id/developer2"
+        android:title="@string/peyman"
+        android:orderInCategory="100"
+        android:showAsAction="never" />
+
 </menu>

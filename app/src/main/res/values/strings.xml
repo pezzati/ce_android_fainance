@@ -5,8 +5,9 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="menu_settings">Settings</string>
-
-    <string name="hw">تمرین دوم</string>
+    <string name="negar">نگار ابوالحسنی</string>
+    <string name="peyman">پیمان عزتی</string>
+    <string name="hw">  تمرین دوم</string>
     <string name="stdID">شماره دانشجویی</string>
     <string name="start">آغاز</string>
     <string name="title_activity_main">Main</string>
@@ -22,6 +23,8 @@
     <string name="dey">دی</string>
     <string name="bahman">بهمن</string>
     <string name="esfand">اسفند</string>
+    <string name="handle">handle</string>
+    <string name="content">content</string>
 
 
 </resources>
