@@ -33,7 +33,7 @@
             android:shadowColor="#ff46ffbc"
             android:singleLine="true"
             android:textColor="#ff2950ff"
-            android:background="@drawable/vpi__tab_indicator"
+            android:background="@drawable/rounded_button"
             android:gravity="center"
             android:focusable="true" />
     </LinearLayout>

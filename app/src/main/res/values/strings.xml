@@ -23,9 +23,11 @@
     <string name="dey">دی</string>
     <string name="bahman">بهمن</string>
     <string name="esfand">اسفند</string>
-    <string name="handle">handle</string>
+    <string name="handle">------</string>
     <string name="content">content</string>
     <string name="note">یادداشت کن</string>
+    <string name="income">درآمد : </string>
+    <string name="outcome">هزینه : </string>
 
 
 </resources>

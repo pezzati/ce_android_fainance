@@ -1,7 +1,11 @@
 package com.negar.peyman.myapplication;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.graphics.PointF;
+import android.graphics.RectF;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -9,32 +13,48 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
+import com.github.mikephil.charting.utils.Legend;
+import com.github.mikephil.charting.utils.XLabels;
+import com.github.mikephil.charting.utils.YLabels;
 import com.hollowsoft.library.slidingdrawer.OnDrawerCloseListener;
 import com.hollowsoft.library.slidingdrawer.OnDrawerOpenListener;
 import com.hollowsoft.library.slidingdrawer.OnDrawerScrollListener;
 import com.hollowsoft.library.slidingdrawer.SlidingDrawer;
-import com.negar.peyman.myapplication.R;
-import com.orm.SugarRecord;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class Main extends FragmentActivity implements OnDrawerScrollListener, OnDrawerOpenListener,
-        OnDrawerCloseListener {
+
+public class Main extends  FragmentActivity implements OnDrawerScrollListener, OnDrawerOpenListener,
+        OnDrawerCloseListener, SeekBar.OnSeekBarChangeListener, OnChartValueSelectedListener {
+
     /**
      * The number of pages (wizard steps) to show in this demo.
      */
     private static final int NUM_PAGES = 365;
-   // FinanceRecord fRecords ;
-    int startPosition = 30;
+    private BarChart mChart;
+    private SeekBar mSeekBarX, mSeekBarY;
+    private TextView tvX, tvY;
+
+    int startPosition;
     ImageButton next;
     ImageButton prev;
     int currentDay;
@@ -42,6 +62,7 @@ public class Main extends FragmentActivity implements OnDrawerScrollListener, On
     int currentYear;
     OvalButton ovalButton;
     int onProgressDay;
+    ScreenSlidePageFragment[] fragments = new ScreenSlidePageFragment[NUM_PAGES];
 
 
     /**
@@ -88,9 +109,82 @@ public class Main extends FragmentActivity implements OnDrawerScrollListener, On
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (ViewPager) findViewById(R.id.pager);
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+        mPager.setPageTransformer(true, new ReaderViewPagerTransformer(ReaderViewPagerTransformer.TransformType.FLOW));
+
         mPager.setAdapter(mPagerAdapter);
         mPager.setCurrentItem(startPosition);
 
+        tvX = (TextView) findViewById(R.id.tvXMax);
+        tvY = (TextView) findViewById(R.id.tvYMax);
+
+        mSeekBarX = (SeekBar) findViewById(R.id.seekBar1);
+        mSeekBarY = (SeekBar) findViewById(R.id.seekBar2);
+
+        mChart = (BarChart) findViewById(R.id.chart1);
+        mChart.setOnChartValueSelectedListener(this);
+
+        // enable the drawing of values
+        mChart.setDrawYValues(true);
+
+        mChart.setDrawValueAboveBar(true);
+
+        mChart.setDescription("");
+
+        // if more than 60 entries are displayed in the chart, no values will be
+        // drawn
+        mChart.setMaxVisibleValueCount(60);
+
+        // disable 3D
+        mChart.set3DEnabled(false);
+
+        // scaling can now only be done on x- and y-axis separately
+        mChart.setPinchZoom(false);
+
+        // draw shadows for each bar that show the maximum value
+        // mChart.setDrawBarShadow(true);
+
+        mChart.setUnit(" €");
+
+        // mChart.setDrawXLabels(false);
+
+        mChart.setDrawGridBackground(false);
+        mChart.setDrawHorizontalGrid(true);
+        mChart.setDrawVerticalGrid(false);
+        // mChart.setDrawYLabels(false);
+
+        // sets the text size of the values inside the chart
+        mChart.setValueTextSize(10f);
+
+        mChart.setDrawBorder(false);
+        //Typeface tf = Typeface.createFromAsset(getAssets(), "OpenSans-Regular.ttf");
+
+        XLabels xl = mChart.getXLabels();
+        xl.setPosition(XLabels.XLabelPosition.BOTTOM);
+        xl.setCenterXLabelText(true);
+        //xl.setTypeface(tf);
+
+        YLabels yl = mChart.getYLabels();
+        //yl.setTypeface(tf);
+        yl.setLabelCount(8);
+        yl.setPosition(YLabels.YLabelPosition.BOTH_SIDED);
+
+       // mChart.setValueTypeface(tf);
+
+        setData(12, 50);
+
+        // setting data
+        mSeekBarY.setProgress(50);
+        mSeekBarX.setProgress(12);
+
+        mSeekBarY.setOnSeekBarChangeListener(this);
+        mSeekBarX.setOnSeekBarChangeListener(this);
+
+        Legend l = mChart.getLegend();
+        l.setPosition(Legend.LegendPosition.BELOW_CHART_LEFT);
+        l.setFormSize(8f);
+        l.setXEntrySpace(4f);
+
+        // mChart.setDrawLegend(false);
 
 
 //        setContentView(R.layout.fragment_screen_slide_page);
@@ -116,6 +210,8 @@ public class Main extends FragmentActivity implements OnDrawerScrollListener, On
                 adjustPercentView();
             }
         });
+
+
 
 
         //DayRecord dayRecord1 = new DayRecord("0","0","0","0");
@@ -149,10 +245,76 @@ public class Main extends FragmentActivity implements OnDrawerScrollListener, On
         adjustPercentView();
     }
 
+    private void setData(int count, float range) {
+
+        ArrayList<String> xVals = new ArrayList<String>();
+        for (int i = 0; i < count; i++) {
+            xVals.add((String.valueOf(i % 12 + 1)));
+
+
+        }
+
+        ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
+
+        for (int i = 0; i < count; i++) {
+            List<DayRecord> records = DayRecord.find(DayRecord.class, "month = ? ", String.valueOf(i+1));
+            System.out.println(records.size() + "&&*****&&");
+            int in = 0, out = 0;
+            for (int j = 0; j < records.size(); j++){
+
+                in += Integer.valueOf(records.get(j).income);
+                out += Integer.valueOf(records.get(j).outcome);
+            }
+//            float mult = (range + 1);
+//            float val = (float) (Math.random() * mult);
+            float val = 0;
+            System.out.println("**********************  out"  + out + " in "+ in);
+            if(in != 0) {
+                val = (float)(out) / (float)in;
+                System.out.println("23234234234*********************** " + val + " out " + out + " in "+ in);
+            }
+            yVals1.add(new BarEntry(val, i));
+        }
+
+        BarDataSet set1 = new BarDataSet(yVals1, "DataSet");
+        set1.setBarSpacePercent(35f);
+
+        ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
+        dataSets.add(set1);
+
+        BarData data = new BarData(xVals, dataSets);
+
+        mChart.setData(data);
+    }
 
 
 
 
+
+    @Override
+    public void onValueSelected(Entry entry, int i) {
+
+    }
+
+    @Override
+    public void onNothingSelected() {
+
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
+    }
 
 
     class InputItem extends EditableItem{
@@ -194,8 +356,14 @@ public class Main extends FragmentActivity implements OnDrawerScrollListener, On
                         int IntOutcome = Integer.valueOf(records.get(0).outcome);
                         IntOutcome  = IntOutcome * 100;
                         ovalButton.setPercent(IntOutcome / IntIncome);
+                        fragments[onProgressDay].income = String.valueOf(IntIncome);
+                        fragments[onProgressDay].outcome = String.valueOf(IntOutcome/100);
+                        fragments[onProgressDay].set(String.valueOf(IntIncome), String.valueOf(IntOutcome));
                         //System.out.println("^^^^^^^^^^^^ " + ovalButton.getPercent());
                     }
+                    fragments[onProgressDay].income = records.get(0).income;
+                    fragments[onProgressDay].outcome = records.get(0).outcome;
+                    fragments[onProgressDay].set(records.get(0).income, records.get(0).outcome);
 
 
                     dialog.dismiss();
@@ -244,8 +412,14 @@ public class Main extends FragmentActivity implements OnDrawerScrollListener, On
                         int IntOutcome = Integer.valueOf(records.get(0).outcome);
                         IntOutcome  = IntOutcome * 100;
                         ovalButton.setPercent(IntOutcome / IntIncome);
+                        fragments[onProgressDay].income = String.valueOf(IntIncome);
+                        fragments[onProgressDay].outcome = String.valueOf(IntOutcome/100);
+                        fragments[onProgressDay].set(String.valueOf(IntIncome), String.valueOf(IntOutcome));
                         //System.out.println("^^^^^^^^^^^^ " + ovalButton.getPercent());
                     }
+                    fragments[onProgressDay].income = records.get(0).income;
+                    fragments[onProgressDay].outcome = records.get(0).outcome;
+                    fragments[onProgressDay].set(records.get(0).income, records.get(0).outcome);
 
 
                     dialog.dismiss();
@@ -382,12 +556,15 @@ public class Main extends FragmentActivity implements OnDrawerScrollListener, On
                 adjustPercentView();
             }
             ScreenSlidePageFragment fragment = new ScreenSlidePageFragment();
+            fragments[position] = fragment;
             Bundle bundle = new Bundle();
             String[] date = getDayMonth(position);
             System.out.println("AAAAAAAA");
             System.out.println(date[0] + " " + date[1]);
-//            bundle.putString("income", FinanceRecord.find(FinanceRecord.class, "day = ? and month = ?", date[0], date[1]).get(0).income );
-//            bundle.putString("outcome", FinanceRecord.find(FinanceRecord.class, "day = ? and month = ?", date[0], date[1]).get(0).outcome);
+
+            List<DayRecord> records = DayRecord.find(DayRecord.class, "month = ? and day = ?", date[2], date[0]);
+            bundle.putString("income", records.get(0).income );
+            bundle.putString("outcome", records.get(0).outcome);
             bundle.putString("day", date[0]);
             bundle.putString("month", date[1]);
             bundle.putString("monthInt", date[2]);

@@ -1,24 +1,16 @@
 <!-- fragment_screen_slide_page.xml -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schems.android.com/tools"
     xmlns:app="http://schems.android.com/apk/res-auto"
     xmlns:app1="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/date"
-    tools:context="com.negar.peyman.myapplication.app">
+    tools:context="com.negar.peyman.myapplication.app"
+    android:layout_gravity="center"
+    android:orientation="vertical">
 
-     <!--<com.negar.peyman.myapplication.OvalButton-->
-        <!--android:id="@+id/pager_OvalButton"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--app1:OvalFillColor="#00ff00"-->
-        <!--app1:OvalStrokeColor="@android:color/black"-->
-        <!--app1:OvalStrokeWidth="1"-->
-        <!--app1:OvalPercent="0"-->
-        <!--app1:OvalButtonColor="#0000ff"-->
-        <!--app1:OvalButtonCount="2"/>-->
 
     <LinearLayout
 
@@ -26,10 +18,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/select"
         android:gravity="center">
-
-
-
-
 
         <TextView style="?android:textAppearanceMedium"
             android:padding="16dp"
@@ -51,17 +39,91 @@
 
     </LinearLayout>
 
-    <Button
-        android:layout_width="wrap_content"
+    <!--<Button-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="New Button"-->
+        <!--android:id="@+id/button_dayView"-->
+        <!--android:layout_below="@+id/select"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_marginTop="76dp" />-->
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="New Button"
-        android:id="@+id/button_dayView"
-        android:layout_below="@+id/select"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="76dp" />
+        android:id="@+id/layout_income"
+        android:gravity="center"
+        android:layout_marginTop="20dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text= "@string/income"
+            android:gravity="center|center_vertical|center_horizontal"
+            android:id="@+id/textView_income"
+            android:background="@drawable/rounded_button"
+            android:layout_weight="0.3" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/revenue"
+            android:text="@string/income"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:gravity="center|center_vertical|center_horizontal"
+            android:clickable="true"
+            android:layout_marginRight="20dp"
+            android:layout_weight="0.7" />
 
 
-</RelativeLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/layout_outcome"
+        android:gravity="center"
+        android:layout_marginTop="20dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/outcome"
+            android:gravity="center|center_vertical|center_horizontal"
+            android:id="@+id/textView_outcome"
+            android:background="@drawable/rounded_button"
+            android:layout_weight="0.3" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/expense"
+            android:text="@string/outcome"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:gravity="center|center_vertical|center_horizontal"
+            android:layout_marginRight="20dp"
+            android:layout_weight="0.7" />
+
+
+
+    </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/outcome"
+        android:gravity="center|center_vertical|center_horizontal"
+        android:background="@drawable/gradinant_box"
+        android:id="@+id/textView_precent"
+        android:layout_marginTop="40dp" />
+
+</LinearLayout>
 
 
 

@@ -28,6 +28,8 @@ public class ScreenSlidePageFragment extends Fragment {
     //InputItem inputItem;
     //OutputItem outputItem;
     //OvalButton ovalButton;
+    String income;
+    String outcome;
     LayoutInflater Myinflater;
     ViewGroup MyContainer;
 
@@ -38,6 +40,8 @@ public class ScreenSlidePageFragment extends Fragment {
         day = getArguments() != null ? getArguments().getString("day") : "fffff";
         month = getArguments() != null ? getArguments().getString("month") : "fffff";
         monthInt = getArguments() != null ? getArguments().getString("monthInt") : "fffff";
+        income = getArguments() != null ? getArguments().getString("income") : "fffff";
+        outcome = getArguments() != null ? getArguments().getString("outcome") : "fffff";
 
         System.out.println("$%$%$%$%$%$% Day:"  + day);
 
@@ -64,29 +68,38 @@ public class ScreenSlidePageFragment extends Fragment {
         }
     }
 */
-
+    View tv, v;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Myinflater = inflater;
         MyContainer = container;
-        View v = inflater.inflate(R.layout.fragment_screen_slide_page, container, false);
-        View tv = v.findViewById(R.id.date_text);
+        v = inflater.inflate(R.layout.fragment_screen_slide_page, container, false);
+        tv = v.findViewById(R.id.date_text);
         ((TextView) tv).setText(day + " - " + month);
-
-        Button dayView = (Button) v.findViewById(R.id.button_dayView);
-        dayView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                List<DayRecord> allDays = DayRecord.listAll(DayRecord.class);
-                for(int i = 0; i < allDays.size(); i++) {
-                    allDays.get(i).income = "0";
-                    allDays.get(i).outcome = "0";
-                    allDays.get(i).save();
-                }
-                System.out.println("!!!!!!!!!!!!!!! dayView: " + day);
-            }
-        });
+        tv = v.findViewById(R.id.textView_income);
+        ((TextView) tv).setText(income + " " + "تومان");
+        tv = v.findViewById(R.id.textView_outcome);
+        ((TextView) tv).setText(outcome+ " " + "تومان");
+        tv = v.findViewById(R.id.textView_precent);
+        int a = 0;
+        if(Integer.valueOf(income) != 0){
+            a = (Integer.valueOf(outcome)*100)/Integer.valueOf(income);
+        }
+        ((TextView) tv).setText(a + " " + "٪");
+//        Button dayView = (Button) v.findViewById(R.id.button_dayView);
+//        dayView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                List<DayRecord> allDays = DayRecord.listAll(DayRecord.class);
+//                for(int i = 0; i < allDays.size(); i++) {
+//                    allDays.get(i).income = "0";
+//                    allDays.get(i).outcome = "0";
+//                    allDays.get(i).save();
+//                }
+//                System.out.println("!!!!!!!!!!!!!!! dayView: " + day);
+//            }
+//        });
 
         /*
         ovalButton = (OvalButton) v.findViewById(R.id.pager_OvalButton);
@@ -102,6 +115,20 @@ public class ScreenSlidePageFragment extends Fragment {
         ovalButton.addEditableItemAtIndex(outputItem, 1);
         */
         return v;
+    }
+
+    public void set(String income, String outcome){
+        tv = v.findViewById(R.id.textView_income);
+        ((TextView) tv).setText(income + " " + "تومان");
+        tv = v.findViewById(R.id.textView_outcome);
+        ((TextView) tv).setText(outcome + " " + "تومان");
+        tv = v.findViewById(R.id.textView_precent);
+        int a = 0;
+        if(Integer.valueOf(income) != 0){
+            a = (Integer.valueOf(outcome)*100)/Integer.valueOf(income);
+        }
+
+        ((TextView) tv).setText(a + " " + "٪");
     }
 /*
     class InputItem extends EditableItem{
