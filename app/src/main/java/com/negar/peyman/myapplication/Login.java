@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.viewpagerindicator.CirclePageIndicator;
 
@@ -37,6 +38,7 @@ public class Login extends Activity {
         getActionBar().setTitle("تمرین دوم");
         setContentView(R.layout.viewpager_main);
         isClicked = false;
+
         // Generate sample data
         rank = new String[] { "1", "2"};
 
@@ -52,7 +54,7 @@ public class Login extends Activity {
 
         // Locate the ViewPager in viewpager_main.xml
         viewPager = (ViewPager) findViewById(R.id.pager);
-
+        System.out.println("%%%%&&**&&&& HI");
         System.out.println(viewPager.isInEditMode());
         //viewPager.setEnabled(true);
         // Pass results to ViewPagerAdapter Class

@@ -1,23 +1,34 @@
 <!-- fragment_screen_slide_page.xml -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schems.android.com/tools"
+    xmlns:app="http://schems.android.com/apk/res-auto"
+    xmlns:app1="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/date">
+    android:id="@+id/date"
+    tools:context="com.negar.peyman.myapplication.app">
+
+     <!--<com.negar.peyman.myapplication.OvalButton-->
+        <!--android:id="@+id/pager_OvalButton"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--app1:OvalFillColor="#00ff00"-->
+        <!--app1:OvalStrokeColor="@android:color/black"-->
+        <!--app1:OvalStrokeWidth="1"-->
+        <!--app1:OvalPercent="0"-->
+        <!--app1:OvalButtonColor="#0000ff"-->
+        <!--app1:OvalButtonCount="2"/>-->
 
     <LinearLayout
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/select"
         android:gravity="center">
 
 
-        <!--<ImageButton-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:id="@+id/pre"-->
-            <!--android:layout_alignParentLeft="true"-->
-            <!--android:background="@android:drawable/ic_media_rew" />-->
+
 
 
         <TextView style="?android:textAppearanceMedium"
@@ -36,13 +47,20 @@
             <!--android:id="@+id/next"-->
             <!--android:background="@android:drawable/ic_media_ff"/>-->
 
+
+
     </LinearLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <Button
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/select"
-        android:id="@+id/finance"></RelativeLayout>
+        android:text="New Button"
+        android:id="@+id/button_dayView"
+        android:layout_below="@+id/select"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="76dp" />
+
+
 </RelativeLayout>
 
 

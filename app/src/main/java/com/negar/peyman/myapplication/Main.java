@@ -1,6 +1,7 @@
 package com.negar.peyman.myapplication;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -12,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.hollowsoft.library.slidingdrawer.OnDrawerCloseListener;
@@ -19,9 +21,11 @@ import com.hollowsoft.library.slidingdrawer.OnDrawerOpenListener;
 import com.hollowsoft.library.slidingdrawer.OnDrawerScrollListener;
 import com.hollowsoft.library.slidingdrawer.SlidingDrawer;
 import com.negar.peyman.myapplication.R;
+import com.orm.SugarRecord;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class Main extends FragmentActivity implements OnDrawerScrollListener, OnDrawerOpenListener,
         OnDrawerCloseListener {
@@ -36,6 +40,8 @@ public class Main extends FragmentActivity implements OnDrawerScrollListener, On
     int currentDay;
     int currentMonth;
     int currentYear;
+    OvalButton ovalButton;
+    int onProgressDay;
 
 
     /**
@@ -49,33 +55,7 @@ public class Main extends FragmentActivity implements OnDrawerScrollListener, On
      */
     PagerAdapter mPagerAdapter;
 
-    private void setRecords(){
-        Calendar cal = Calendar.getInstance();
-        int month = 1;
-        int day = 1;
-        for (int i = 0; i < NUM_PAGES; i++) {
-            //fRecords = new FinanceRecord(String.valueOf(day), String.valueOf(month), "2014", String.valueOf(i*4), "0");
 
-
-            if(day == 31 && (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12) ){
-                month++;
-                month = month % 12;
-                day = 1;
-            }
-            else if(day == 29 && month == 2){
-                month++;
-                day = 1;
-            }
-            else if(day == 30){
-                month++;
-                day = 1;
-            }
-            else
-                day++;
-
-        }
-
-    }
     private int getItem(int i) {
         return mPager.getCurrentItem() + i;
     }
@@ -90,20 +70,28 @@ public class Main extends FragmentActivity implements OnDrawerScrollListener, On
         currentMonth = cal.get(Calendar.MONTH);
         currentYear = cal.get(Calendar.YEAR);
         startPosition = cal.get(Calendar.DAY_OF_YEAR);
+        onProgressDay = startPosition;
 
-        setContentView(R.layout.activity_main);
 
-//        final SlidingDrawer slidingDrawer = (SlidingDrawer) findViewById(R.id.sliding_drawer);
-//
-//        slidingDrawer.setOnDrawerScrollListener(this);
-//        slidingDrawer.setOnDrawerOpenListener(this);
-//        slidingDrawer.setOnDrawerCloseListener(this);
+
+        System.out.println("#### AT first Day is: " + onProgressDay);
+        setContentView(R.layout.main_activity);
+
+        final SlidingDrawer slidingDrawer = (SlidingDrawer) findViewById(R.id.sliding_drawer);
+
+        slidingDrawer.setOnDrawerScrollListener(this);
+        slidingDrawer.setOnDrawerOpenListener(this);
+        slidingDrawer.setOnDrawerCloseListener(this);
+
+       // LineChart chart = (LineChart) findViewById(R.id.chart);
 
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (ViewPager) findViewById(R.id.pager);
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
         mPager.setCurrentItem(startPosition);
+
+
 
 //        setContentView(R.layout.fragment_screen_slide_page);
         next = (ImageButton)findViewById(R.id.next);
@@ -112,6 +100,9 @@ public class Main extends FragmentActivity implements OnDrawerScrollListener, On
             @Override
             public void onClick(View view) {
                 mPager.setCurrentItem(getItem(+1), true); //getItem(-1) for previous
+                //onProgressDay++;
+                adjustPercentView();
+
             }
         });
 
@@ -121,9 +112,157 @@ public class Main extends FragmentActivity implements OnDrawerScrollListener, On
             @Override
             public void onClick(View view) {
                 mPager.setCurrentItem(getItem(-1), true); //getItem(-1) for previous
+                //onProgressDay--;
+                adjustPercentView();
             }
         });
+
+
+        //DayRecord dayRecord1 = new DayRecord("0","0","0","0");
+        //dayRecord1.save();
+
+        if(DayRecord.listAll(DayRecord.class).isEmpty()){
+            for(int i = 1; i <= 12; i++){
+                int dayOfMonth = 31;
+                if(i > 6)
+                    dayOfMonth = 30;
+                if(i == 12)
+                    dayOfMonth = 29;
+                for(int j = 1; j <= dayOfMonth; j++){
+                    DayRecord dayRecord = new DayRecord(String.valueOf(i), String.valueOf(j), "0","0");
+                    dayRecord.save();
+                }
+            }
+        }
+
+       // DayRecord.deleteAll(DayRecord.class);
+        //SugarRecord.deleteAll(DayRecord.class);
+
+        ovalButton = (OvalButton) findViewById(R.id.Oval_Button_Main);
+
+        InputItem inputItem = new InputItem("درآمد");
+        ovalButton.addEditableItemAtIndex(inputItem, 0);
+
+        OutputItem outputItem = new OutputItem("هزینه");
+        ovalButton.addEditableItemAtIndex(outputItem, 1);
+
+        adjustPercentView();
     }
+
+
+
+
+
+
+
+    class InputItem extends EditableItem{
+        public InputItem(String s){
+            super();
+            label = s;
+        }
+
+        @Override
+        public void onTouchEvent() {
+            super.onTouchEvent();
+            //System.out.println("#######Fuck you " + day);
+            ////Open dialog
+
+            final Dialog dialog = new Dialog(Main.this);
+            dialog.setContentView(R.layout.get_dialog);
+            dialog.setTitle("مبلغ");
+
+            final EditText editText_fee = (EditText) dialog.findViewById(R.id.editText_fee);
+            Button button_note = (Button) dialog.findViewById(R.id.button_set);
+
+
+            dialog.show();
+
+            button_note.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ////
+                    //System.out.println("####### Note for day is:" + editText_fee.getText() + " " + day);
+
+                    String[] d = ((ScreenSlidePagerAdapter)mPagerAdapter).getDayMonth(onProgressDay);
+                    List<DayRecord> records =  DayRecord.find(DayRecord.class, "month = ? and day = ?", d[2], d[0]);
+                    records.get(0).income = String.valueOf(Integer.valueOf(records.get(0).income) + Integer.valueOf(String.valueOf(editText_fee.getText())));
+                    records.get(0).save();
+                    System.out.println("$$$$$$$$$  month: " + records.get(0).month + " day: " + records.get(0).day +"  income: " + records.get(0).income);
+
+                    if(!records.get(0).income.equals("0")){
+                        int IntIncome = Integer.valueOf(records.get(0).income);
+                        int IntOutcome = Integer.valueOf(records.get(0).outcome);
+                        IntOutcome  = IntOutcome * 100;
+                        ovalButton.setPercent(IntOutcome / IntIncome);
+                        //System.out.println("^^^^^^^^^^^^ " + ovalButton.getPercent());
+                    }
+
+
+                    dialog.dismiss();
+                }
+            });
+
+
+        }
+    }
+
+
+    class OutputItem extends EditableItem{
+        public OutputItem(String s){
+            super();
+            label = s;
+        }
+        @Override
+        public void onTouchEvent() {
+            super.onTouchEvent();
+
+            //System.out.println("##########Output         " + day);
+
+            final Dialog dialog = new Dialog(Main.this);
+            dialog.setContentView(R.layout.get_dialog);
+            dialog.setTitle("مبلغ");
+
+            final EditText editText_fee = (EditText) dialog.findViewById(R.id.editText_fee);
+            Button button_note = (Button) dialog.findViewById(R.id.button_set);
+
+
+            dialog.show();
+
+            button_note.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ////
+                    System.out.println("####### Note is:" + editText_fee.getText());
+                    String[] d = ((ScreenSlidePagerAdapter)mPagerAdapter).getDayMonth(onProgressDay);
+                    List<DayRecord> records =  DayRecord.find(DayRecord.class, "month = ? and day = ?", d[2], d[0]);
+                    records.get(0).outcome = String.valueOf(Integer.valueOf(records.get(0).outcome) + Integer.valueOf(String.valueOf(editText_fee.getText())));
+                    records.get(0).save();
+                    System.out.println("$$$$$$$$$  month: " + records.get(0).month + " day: " + records.get(0).day + "  outcome: " + records.get(0).outcome);
+
+                    if(!records.get(0).income.equals("0")){
+                        int IntIncome = Integer.valueOf(records.get(0).income);
+                        int IntOutcome = Integer.valueOf(records.get(0).outcome);
+                        IntOutcome  = IntOutcome * 100;
+                        ovalButton.setPercent(IntOutcome / IntIncome);
+                        //System.out.println("^^^^^^^^^^^^ " + ovalButton.getPercent());
+                    }
+
+
+                    dialog.dismiss();
+                }
+            });
+        }
+    }
+
+
+
+
+
+
+
+
+
+
 
     @Override
     public void onBackPressed() {
@@ -185,13 +324,29 @@ public class Main extends FragmentActivity implements OnDrawerScrollListener, On
     }
 
 
+    private void adjustPercentView(){
+        String[] d = ((ScreenSlidePagerAdapter)mPagerAdapter).getDayMonth(onProgressDay);
+        List<DayRecord> records = DayRecord.find(DayRecord.class, "month = ? and day = ?", d[2], d[0]);
+        if(!records.get(0).income.equals("0")){
+            int income = Integer.valueOf(records.get(0).income);
+            int outcome = Integer.valueOf(records.get(0).outcome);
+            outcome = outcome * 100;
+            ovalButton.setPercent(outcome/ income);
+            return;
+        }
+        else
+            ovalButton.setPercent(0);
+
+        return;
+    }
+
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
         public ScreenSlidePagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
-        private String[] getDayMonth(int position){
-            String[] date = new String[2];
+        public String[] getDayMonth(int position){
+            String[] date = new String[3];
 
             Calendar cal = Calendar.getInstance();
             cal.set(Calendar.DAY_OF_YEAR, position);
@@ -205,14 +360,27 @@ public class Main extends FragmentActivity implements OnDrawerScrollListener, On
 
             date[0] = String.valueOf(shamsi.date);
             date[1] = shamsi.strMonth;
+            date[2] = String.valueOf(shamsi.month);
             return date;
         }
+
+
 
         @Override
         public Fragment getItem(int position)
         {
             System.out.println("%%%%%%");
             System.out.println(position);
+            if(position - onProgressDay >= 2) {
+                onProgressDay++;
+                System.out.println("##### Day ++ : " + onProgressDay);
+                adjustPercentView();
+            }
+            else if(onProgressDay - position >= 2) {
+                onProgressDay--;
+                System.out.println("##### Day -- : " + onProgressDay);
+                adjustPercentView();
+            }
             ScreenSlidePageFragment fragment = new ScreenSlidePageFragment();
             Bundle bundle = new Bundle();
             String[] date = getDayMonth(position);
@@ -222,6 +390,7 @@ public class Main extends FragmentActivity implements OnDrawerScrollListener, On
 //            bundle.putString("outcome", FinanceRecord.find(FinanceRecord.class, "day = ? and month = ?", date[0], date[1]).get(0).outcome);
             bundle.putString("day", date[0]);
             bundle.putString("month", date[1]);
+            bundle.putString("monthInt", date[2]);
             fragment.setArguments(bundle);
             return fragment;
         }
